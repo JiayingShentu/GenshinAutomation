@@ -1,14 +1,8 @@
 import windowController
+import logics
 import pyautogui
-import win32gui
-import time, ctypes, sys
 
+# Default window size: 1024 * 768
 
 hwnd = windowController.switchWindow()
-windowRect = win32gui.GetWindowRect(hwnd)
-
-print("Window Rectangle:", windowRect)
-
-pyautogui.hotkey('esc')
-
-windowController.captureWindow(hwnd)
+logics.configureTeam(hwnd)
