@@ -60,4 +60,39 @@ def configureTeam(hwnd):
     pyautogui.click(left+matchRect[0],top+matchRect[1],duration=0.5)
     return 1
 
+def exploreDispatch(hwnd):
+    print("press M")
+    time.sleep(1)
+    pyautogui.press("M")
+    time.sleep(3)
+    capture = windowController.captureWindow(hwnd)
+    matchRect = cvMatcher.match("Resources/ExploreDispatch_Map.png", capture)
+    print("find Name ExploreDispatch:", ("fail" if matchRect == None else "success"))
+     
+    left, top, right, bottom = win32gui.GetWindowRect(hwnd)
+    width = right - left
+    height = bottom - top
 
+    pyautogui.click(left + matchRect[0], top + matchRect[1], duration=0.5)
+    print("explore dispatch: clicked")
+
+    time.sleep(1)
+    capture = windowController.captureWindow(hwnd)
+    
+    nation_name=findNationName(capture)
+    if nation_name==None:
+        print("find nation name: give up")
+        return None
+
+    pyautogui.click(left + width*9/10,top + height*15/16,duration=0.5)
+    print("transferTo"+nation_name+": clicked")
+    return
+
+def findNationName(capture):
+    nations=["Monde","Liyue","Daoqi","Xumi"]
+    for nation in nations:
+        matchRect = cvMatcher.match("Resources/transferTo"+nation+".png", capture)
+        if matchRect != None:
+            return nation
+        print("find transferTo"+nation+":", ("fail" if matchRect == None else "success"))
+    return None

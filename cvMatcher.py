@@ -27,11 +27,12 @@ def match(fileName, capture):
     
     img_matches = np.empty((max(pattern.shape[0], capture.shape[0]), pattern.shape[1]+capture.shape[1], 3), dtype=np.uint8)
     cv.drawMatches(pattern, patternKeyPoints, capture, captureKeyPoints, good_matches, img_matches, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
-    #cv.imshow('Good Matches', img_matches)
-    #cv.waitKey()
+    # cv.imshow('Good Matches', img_matches)
+    # cv.waitKey()
 
-    match_threshold = 3
-    if len(good_matches) < match_threshold:
+    print("goodmatches:",len(good_matches),", patternKeyPoints:",len(patternKeyPoints))
+    match_threshold = 0.1
+    if len(good_matches) / len(patternKeyPoints) <match_threshold:
         print("cvMatcher: match failed.")
         return None
     print("cvMatcher: match succeeded.")
@@ -41,6 +42,8 @@ def match(fileName, capture):
     for i in range(len(good_matches)):
         sceneX.append(captureKeyPoints[good_matches[i].trainIdx].pt[0])
         sceneY.append(captureKeyPoints[good_matches[i].trainIdx].pt[1])
+
+    
     # cv.imshow('Good Matches & Object detection', img_matches)
     # cv.waitKey()
     return [sorted(sceneX)[len(sceneX) // 2], sorted(sceneY)[len(sceneY) // 2]]
